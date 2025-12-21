@@ -69,76 +69,78 @@ def osint_tracker():
     # 30+ Real URLs
     sites = {
         "GitHub": f"https://github.com/{target}",
-        "Instagram": "https://www.instagram.com/{target}"
-"Facebook": "https://www.facebook.com/{target}"
-"Twitter": "https://www.twitter.com/{target}"
-"YouTube": "https://www.youtube.com/{target}"
-"Blogger": "https://{target}.blogspot.com"
-"GooglePlus": "https://plus.google.com/+{target}/posts"
-"Reddit": "https://www.reddit.com/user/{target}"
-"Wordpress": "https://{target}.wordpress.com"
-"Pinterest": "https://www.pinterest.com/{target}"
-"Github": "https://www.github.com/{target}"
-"Tumblr": "https://{target}.tumblr.com"
-"Flickr": "https://www.flickr.com/photos/{target}"
-"Steam": "https://steamcommunity.com/id/{target}"
-"Vimeo": "https://vimeo.com/{target}"
-"SoundCloud": "https://soundcloud.com/{target}"
-"Disqus": "https://disqus.com/{target}"
-"Medium": "https://medium.com/@{target}"
-"DeviantART": "https://{target}.deviantart.com"
-"VK": "https://vk.com/{target}"
-"About.me": "https://about.me/{target}"
-"Spotify": "http://googleusercontent.com/spotify.com/{target}"
-"MixCloud": "https://www.mixcloud.com/{target}"
-"Scribd": "https://www.scribd.com/{target}"
-"Badoo": "https://www.badoo.com/en/{target}"
-"Patreon": "https://www.patreon.com/{target}"
-"BitBucket": "https://bitbucket.org/{target}"
-"CashMe": "https://cash.me/{target}"
-"Behance": "https://www.behance.net/{target}"
-"GoodReads": "https://www.goodreads.com/{target}"
-"Instructables": "https://www.instructables.com/member/{target}"
-"Keybase": "https://keybase.io/{target}"
-"Kongregate": "https://kongregate.com/accounts/{target}"
-"LiveJournal": "https://{target}.livejournal.com"
-"AngelList": "https://angel.co/{target}"
-"last.fm": "https://last.fm/user/{target}"
-"Dribbble": "https://dribbble.com/{target}"
-"Codecademy": "https://www.codecademy.com/{target}"
-"Gravatar": "https://en.gravatar.com/{target}"
-"Pastebin": "https://pastebin.com/u/{target}"
-"Foursquare": "https://foursquare.com/{target}"
-"Roblox": "https://www.roblox.com/user.aspx?username={target}"
-"Gumroad": "https://www.gumroad.com/{target}"
-"Newgrounds": "https://{target}.newgrounds.com"
-"Wattpad": "https://www.wattpad.com/user/{target}"
-"Canva": "https://www.canva.com/{target}"
-"CreativeMarket": "https://creativemarket.com/{target}"
-"Trakt": "https://www.trakt.tv/users/{target}"
-"500px": "https://500px.com/{target}"
-"Buzzfeed": "https://buzzfeed.com/{target}"
-"TripAdvisor": "https://tripadvisor.com/members/{target}"
-"HubPages": "https://{target}.hubpages.com/"
-"Contently": "https://{target}.contently.com"
-"Houzz": "https://houzz.com/user/{target}"
-"blip.fm": "https://blip.fm/{target}"
-"Wikipedia": "https://www.wikipedia.org/wiki/User:{target}"
-"HackerNews": "https://news.ycombinator.com/user?id={target}"
-"CodeMentor": "https://www.codementor.io/{target}"
-"ReverbNation": "https://www.reverbnation.com/{target}"
-"Designspiration": "https://www.designspiration.net/{target}"
-"Bandcamp": "https://www.bandcamp.com/{target}"
-"ColourLovers": "https://www.colourlovers.com/love/{target}"
-"IFTTT": "https://www.ifttt.com/p/{target}"
-"Ebay": "https://www.ebay.com/usr/{target}"
-"Slack": "https://{target}.slack.com"
-"OkCupid": "https://www.okcupid.com/profile/{target}"
-"Trip": "https://www.trip.skyscanner.com/user/{target}"
-"Ello": "https://ello.co/{target}"
-"Tracky": "https://tracky.com/~{target}"
-"Tripit": "https://www.tripit.com/people/{target}#/profile/basic-info"
-"Basecamp": "https://{target}.basecamphq.com/login"
+        "Instagram": f"https://www.instagram.com/{target}",
+        "Facebook": f"https://www.facebook.com/{target}",
+        "Twitter": f"https://www.twitter.com/{target}",
+        "YouTube": f"https://www.youtube.com/{target}",
+        "Blogger": f"https://{target}.blogspot.com",
+        "GooglePlus": f"https://plus.google.com/+{target}/posts",
+        "Reddit": f"https://www.reddit.com/user/{target}",
+        "Wordpress": f"https://{target}.wordpress.com",
+        "Pinterest": f"https://www.pinterest.com/{target}",
+        "Github": f"https://www.github.com/{target}",
+        "Tumblr": f"https://{target}.tumblr.com",
+        "Flickr": f"https://www.flickr.com/photos/{target}",
+        "Steam": f"https://steamcommunity.com/id/{target}",
+        "Vimeo": f"https://vimeo.com/{target}",
+        "SoundCloud": f"https://soundcloud.com/{target}",
+        "Disqus": f"https://disqus.com/{target}",
+        "Medium": f"https://medium.com/@{target}",
+        "DeviantART": f"https://{target}.deviantart.com",
+        "VK": f"https://vk.com/{target}",
+        "About.me": f"https://about.me/{target}",
+        "Spotify": f"http://googleusercontent.com/spotify.com/{target}",
+        "MixCloud": f"https://www.mixcloud.com/{target}",
+        "Scribd": f"https://www.scribd.com/{target}",
+        "Badoo": f"https://www.badoo.com/en/{target}",
+        "Patreon": f"https://www.patreon.com/{target}",
+        "BitBucket": f"https://bitbucket.org/{target}",
+        "CashMe": f"https://cash.me/{target}",
+        "Behance": f"https://www.behance.net/{target}",
+        "GoodReads": f"https://www.goodreads.com/{target}",
+        "Instructables": f"https://www.instructables.com/member/{target}",
+        "Keybase": f"https://keybase.io/{target}",
+        "Kongregate": f"https://kongregate.com/accounts/{target}",
+        "LiveJournal": f"https://{target}.livejournal.com",
+        "AngelList": f"https://angel.co/{target}",
+        "last.fm": f"https://last.fm/user/{target}",
+        "Dribbble": f"https://dribbble.com/{target}",
+        "Codecademy": f"https://www.codecademy.com/{target}",
+        "Gravatar": f"https://en.gravatar.com/{target}",
+        "Pastebin": f"https://pastebin.com/u/{target}",
+        "Foursquare": f"https://foursquare.com/{target}",
+        "Roblox": f"https://www.roblox.com/user.aspx?username={target}",
+        "Gumroad": f"https://www.gumroad.com/{target}",
+        "Newgrounds": f"https://{target}.newgrounds.com",
+        "Wattpad": f"https://www.wattpad.com/user/{target}",
+        "Canva": f"https://www.canva.com/{target}",
+        "CreativeMarket": f"https://creativemarket.com/{target}",
+        "Trakt": f"https://www.trakt.tv/users/{target}",
+        "500px": f"https://500px.com/{target}",
+        "Buzzfeed": f"https://buzzfeed.com/{target}",
+        "TripAdvisor": f"https://tripadvisor.com/members/{target}",
+        "HubPages": f"https://{target}.hubpages.com/",
+        "Contently": f"https://{target}.contently.com",
+        "Houzz": f"https://houzz.com/user/{target}",
+        "blip.fm": f"https://blip.fm/{target}",
+        "Wikipedia": f"https://www.wikipedia.org/wiki/User:{target}",
+        "HackerNews": f"https://news.ycombinator.com/user?id={target}",
+        "CodeMentor": f"https://www.codementor.io/{target}",
+        "ReverbNation": f"https://www.reverbnation.com/{target}",
+        "Designspiration": f"https://www.designspiration.net/{target}",
+        "Bandcamp": f"https://www.bandcamp.com/{target}",
+        "ColourLovers": f"https://www.colourlovers.com/love/{target}",
+        "IFTTT": f"https://www.ifttt.com/p/{target}",
+        "Ebay": f"https://www.ebay.com/usr/{target}",
+        "Slack": f"https://{target}.slack.com",
+        "OkCupid": f"https://www.okcupid.com/profile/{target}",
+        "Trip": f"https://www.trip.skyscanner.com/user/{target}",
+        "Ello": f"https://ello.co/{target}",
+        "Tracky": f"https://tracky.com/~{target}",
+        "Tripit": f"https://www.tripit.com/people/{target}#/profile/basic-info",
+        "Basecamp": f"https://{target}.basecamphq.com/login",
+        "BugCrowd": f"https://bugbrowd.com/h/{target}",
+        "Hackerone": f"https://hackerone.com/profile/{target}"
     }
 
     found_list = []
@@ -478,6 +480,7 @@ def main():
 
 if __name__ == "__main__": 
     main()
+
 
 
 
