@@ -54,10 +54,10 @@ sudo python3 main.py
 ## 📂 Project Structure
 
 Sentinel-X/
-├── main.py              # Main Orchestrator & UI
-├── sentinel_vault/      # Encrypted/Raw Session Logs (.pcap)
-├── requirements.txt     # Python Dependencies
-└── README.md            # Documentation
+├── main.py             
+├── sentinel_vault/     
+├── requirements.txt   
+└── README.md    
 
 # ⚠️ Legal Disclaimer
 
