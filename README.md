@@ -25,27 +25,25 @@ Sentinel-X automates the entire "Man-in-the-Middle" lifecycle:
 Ensure you are running a Linux-based system (Kali, Parrot, or Ubuntu).
 1. Install System Dependencies
 
-```sudo apt update && sudo apt install bettercap mitmproxy iptables python3-pip -y```
+`sudo apt update && sudo apt install bettercap mitmproxy iptables python3-pip -y`
 
 2. Install Python Packages
 
-```pip install -r requirements.txt```
+    `pip install -r requirements.txt`
 
 Requirements: scapy, requests, colorama, pyttsx3
 
 3. Run the Tool
 
-```sudo python3 main.py```
+`sudo python3 main.py`
 
     Note: Root privileges are required for MITM and Network Sniffing operations.
 
 📂 Project Structure
 
 Sentinel-X/
-├── sentinel_x.py       # Main Orchestrator
-├── sentinel_vault/     # Auto-saved PCAP & Logs
-├── sentinel_logs/      # Debug & Session data
-└── README.md           # Documentation
+├── main.py         
+└── README.md          
 
 ⚠️ Disclaimer
 
