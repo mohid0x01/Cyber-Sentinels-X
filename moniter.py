@@ -16,7 +16,17 @@ def module_system_monitor():
     Targeting Critical Windows Components & Persistence Mechanisms.
     """
 
-    # --- LOGGING SETUP ---
+    # --- 1. KALI LINUX COMPATIBILITY CHECK ---
+    # Agar OS Windows ('nt') nahi hai, to ye error dikha kar wapis chala jayega
+    if os.name != 'nt':
+        print(f"\n{Fore.RED}{Style.BRIGHT}[!] ERROR: SYSTEM MONITOR IS DESIGNED FOR WINDOWS KERNELS")
+        print(f"{Fore.YELLOW}[*] Detected OS: {os.name.upper()} (Kali Linux/Unix)")
+        print(f"{Fore.CYAN}[*] Reason: This module executes PowerShell & Netsh commands.")
+        print(f"\n{Fore.WHITE}Returning to Sentinel-X Kernel Menu in 3 seconds...")
+        time.sleep(3)
+        return # Yeh line script ko crash hone se bachati hai
+
+    # --- 2. LOGGING SETUP (Sirf Windows par chalega) ---
     log_data = []
     log_folder = "System_Check"
     if not os.path.exists(log_folder):
