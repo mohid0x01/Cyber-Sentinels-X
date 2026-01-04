@@ -1,64 +1,93 @@
 # 🚀 Sentinel-X | Elite Network Security Framework
 
-Sentinel-X is a high-performance, automated network exploitation and OSINT framework. It seamlessly orchestrates Bettercap and Mitmproxy to perform stealthy interception, SSL stripping, and deep packet analysis through a single command-line interface.
+**Sentinel-X** is a Command & Control C2 with high-performance, automated network exploitation and OSINT framework. It seamlessly orchestrates professional-grade tools like **Bettercap**, **Mitmproxy**, and **Scapy** to perform stealthy interception, SSL stripping, and deep packet analysis through a single, unified Command-Line Interface (CLI).
+
+---
 
 ## 🛡️ Key Modules
-Module	Functionality	Core Engine
-OSINT Tracker	Global username search across 60+ platforms.	Requests / Threading
-MITM Elite	Automated ARP Spoofing & Transparent Proxying.	Bettercap + Mitmproxy
-Network Discovery	Real-time ARP mapping & Target Identification.	Scapy
-Web Recon	Fingerprinting, SSL Check, & Directory Brute-forcing.	HTTP Probes
-Port Scanner	High-speed multi-threaded TCP port discovery.	Socket
-📸 MITM Workflow
+
+| Module | Functionality | Core Engine |
+| --- | --- | --- |
+| **OSINT Tracker** | Global username search across 60+ platforms. | Requests / Threading |
+| **MITM Elite** | Automated ARP Spoofing & Transparent Proxying. | Bettercap + Mitmproxy |
+| **Network Discovery** | Real-time ARP mapping & Target Identification. | Scapy |
+| **Web Recon** | Fingerprinting, SSL Check, & AI-driven Analysis. | Gemini AI + Requests |
+| **Port Scanner** | High-speed multi-threaded TCP port discovery (1-65535). | Socket / ThreadPool |
+| **System Monitor** | Host Integrity Audit & Forensic Sanitization. | Windows Kernel API |
+
+---
+
+## 📸 MITM Workflow
 
 Sentinel-X simplifies complex network attacks into an automated 4-step sequence:
 
-    Intelligence: Auto-scans the LAN to identify active hosts and their MAC addresses.
+1. **Intelligence**: Auto-scans the LAN to identify active hosts and their MAC addresses.
+2. **Diversion**: Manipulates ARP tables and sets up cross-platform NAT rules (iptables/netsh) for transparent routing.
+3. **Capture**: Initiates the Mitmproxy engine to intercept and modify high-level HTTP/S traffic.
+4. **Exfiltration**: Automatically archives logs and raw flows into the `sentinel_vault/`.
 
-    Diversion: Manipulates ARP tables and sets up iptables NAT rules for transparent routing.
+---
 
-    Capture: Initiates the Mitmproxy engine to intercept high-level HTTP/S traffic.
+## ✨ Advanced Features
 
-    Exfiltration: Automatically archives logs and raw flows into the sentinel_vault/.
+* **AI-Powered Recon**: Integrated with **Google Gemini** to provide real-time security verdicts on target headers and configurations.
+* **Safe-Audio Engine**: Intelligent audio detection that automatically bridges WSL2/Linux audio or silences itself if no hardware is found, preventing system crashes.
+* **SSLStrip Integration**: Automatically attempts to downgrade HTTPS connections to intercept plaintext data.
+* **Cross-Platform Defense**: A dedicated **System Monitor** module for Windows that audits kernel integrity and wipes forensic tracks.
+* **Self-Healing Cleanup**: Automatically flushes networking tables and restores IP forwarding on exit to prevent network downtime.
 
-# ✨ Advanced Features
+---
 
-    SSLStrip Integration: Automatically attempts to downgrade HTTPS connections to intercept plaintext data.
+## ⚙️ Quick Start
 
-    OS Fingerprinting: Analyzes TTL values to identify if the target is running Windows, Linux, or Android.
-
-    Self-Healing Cleanup: Automatically flushes iptables and restores IP forwarding on exit to prevent target network downtime.
-
-    Visual Dashboard: Real-time attack monitoring with custom color-coded status indicators.
-
-# ⚙️ Quick Start
 ### 1. Prerequisites
 
-Ensure you are using Kali Linux, Parrot OS, or any Debian-based system.
+Sentinel-X is optimized for **Kali Linux**, **WSL2**, and **Windows**. Ensure you have the following engines installed:
 
-```sudo apt update && sudo apt install bettercap mitmproxy iptables python3-pip -y```
-```sudo apt update && sudo apt install espeak-ng libespeak-ng-dev -y```
+```bash
+# For Kali Linux / Ubuntu
+sudo apt update && sudo apt install bettercap mitmproxy iptables libasound2-plugins -y
+
+```
 
 ### 2. Installation
 
-Clone the repository and install the Python dependencies:
+Clone the repository and install the dependencies. The framework includes a specialized fix for Windows-to-Linux line endings:
 
-`git clone https://github.com/rehan-qx/sentinel-x.git && cd sentinel-x && pip install -r requirements.txt && sed -i 's/\r$//' install.sh && bash install.sh`
+```bash
+git clone https://github.com/rehan-qx/sentinel-x.git
+cd sentinel-x
+pip install -r requirements.txt
+sed -i 's/\r$//' *.py  # Fixes Windows line endings for Linux execution
+
+```
 
 ### 3. Execution
 
-Launch the framework with root privileges (required for network socket manipulation):
+Launch the framework with root privileges (required for network socket manipulation and ARP spoofing):
 
-```sudo python3 main.py```
+```bash
+sudo python3 main.py
+
+```
+
+---
 
 ## 📂 Project Structure
 
+```text
 Sentinel-X/
-├── main.py             
-├── sentinel_vault/     
-├── requirements.txt   
-└── README.md    
+├── main.py            # Framework Kernel & Menu System
+├── recon.py           # AI-Enhanced Web Intelligence Module
+├── moniter.py         # Windows Integrity & Defense Module
+├── sentinel_vault/    # Captured Data & Session Logs
+├── System_Check/      # System Audit Reports
+└── requirements.txt   # Python Dependencies
 
-# ⚠️ Legal Disclaimer
+```
 
-For Educational Use Only. Sentinel-X is designed for authorized penetration testing and security auditing. The developer is not responsible for any unauthorized use or damage. Use this tool ethically and always obtain permission before testing.
+---
+
+## ⚠️ Legal Disclaimer
+
+**For Educational Use Only.** Sentinel-X is designed for authorized penetration testing and security auditing. The developer is not responsible for any unauthorized use, illegal activities, or damage caused by this tool. Use this framework ethically and always obtain written permission before testing any network or system.
