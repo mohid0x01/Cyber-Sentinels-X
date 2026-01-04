@@ -13,6 +13,14 @@ import pyttsx3
 import subprocess
 import shutil
 import signal
+# --- Safe Audio Initialization ---
+try:
+    engine = pyttsx3.init()
+    engine.setProperty('rate', 160)
+    engine.setProperty('volume', 1.0)
+    AUDIO_ENABLED = True
+except Exception:
+    AUDIO_ENABLED = False
 
 IS_WINDOWS = os.name == 'nt'
 
@@ -28,16 +36,26 @@ engine.setProperty('rate', 160)
 engine.setProperty('volume', 1.0)
 
 def speak(text):
+    if not AUDIO_ENABLED:
+        return
     try:
         engine.say(text)
         engine.runAndWait()
-    except: pass
+    except:
+        pass
 
 def log(text, level="INFO"):
     t = datetime.now().strftime("%H:%M:%S")
-    colors = {"INFO": Fore.CYAN, "SUCCESS": Fore.GREEN, "ALERT": Fore.RED, "WARN": Fore.YELLOW}
-    print(f"{Fore.WHITE}[{t}] [colors{level}[{level}] {Fore.WHITE}{text}]")
-    return
+    # Fixed dictionary and string formatting
+    colors = {
+        "INFO": Fore.CYAN, 
+        "SUCCESS": Fore.GREEN, 
+        "ALERT": Fore.RED, 
+        "WARN": Fore.YELLOW,
+        "ERROR": Fore.RED
+    }
+    color = colors.get(level, Fore.WHITE)
+    print(f"{Fore.WHITE}[{t}] {color}[{level}] {Fore.WHITE}{text}")
 
 def banner():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -58,7 +76,7 @@ def osint_tracker():
     speak("Global OSINT Tracker initialized.")
     target = input(Fore.WHITE + "\nroot@sentinel:~/osint# Target Username: ")
     
-    print(Fore.CYAN + "\n[*] Initializing Search Threads for 30+ Platforms...")
+    print(Fore.CYAN + "\n[*] Initializing Search Threads for 60+ Platforms...")
     print(Fore.CYAN + "[*] Please wait, checking databases...\n")
     
     headers = {
